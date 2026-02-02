@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Instructor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 font-sans text-gray-800">
+
+<div class="bg-indigo-600 text-white px-8 py-4 flex justify-between items-center shadow-md">
+    <h1 class="text-lg font-semibold">Instructor Dashboard</h1>
+
+    <div class="flex items-center gap-6 text-sm">
+        <span>
+            Welcome,
+            <span class="font-medium" th:text="${#authentication.name}"></span>
+        </span>
+
+        <span class="bg-orange-500 px-3 py-1 rounded-full text-xs font-semibold">
+            INSTRUCTOR
+        </span>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-md text-sm font-medium">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- HEADER -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-1">Manage Your Courses</h2>
+        <p class="text-gray-600">Create and track your submitted courses</p>
+    </div>
+    <!-- GLOBAL ERROR MESSAGE -->
+    <div th:if="${errorMessage}"
+         class="bg-red-100 text-red-700 px-4 py-2 rounded mb-6">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <div class="text-3xl font-bold text-indigo-600"
+                 th:text="${courses.size()}">0</div>
+            <div class="text-sm text-gray-500 mt-1">Total Courses</div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow mb-10">
+        <h3 class="text-lg font-semibold mb-4">Your Submitted Courses</h3>
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead class="bg-indigo-50 text-gray-700">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">ID</th>
+                    <th class="px-4 py-3 text-left font-semibold">Title</th>
+                    <th class="px-4 py-3 text-left font-semibold">Description</th>
+                    <th class="px-4 py-3 text-left font-semibold">Status</th>
+                    <th class="px-4 py-3 text-left font-semibold">Enrolled Students</th>
+                    <th class="px-4 py-3 text-left font-semibold">View Lessons</th>
+                </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100">
+                <tr th:each="course, stat : ${courses}"
+                    class="hover:bg-slate-50 transition">
+
+                    <td class="px-4 py-3" th:text="${stat.count}"></td>
+                    <td class="px-4 py-3 font-medium" th:text="${course.title}"></td>
+                    <td class="px-4 py-3" th:text="${course.description}"></td>
+
+                    <td class="px-4 py-3">
+                        <span th:if="${course.approved}"
+                              class="px-3 py-1 rounded-full text-xs font-semibold
+                                     bg-green-100 text-green-700">
+                            Approved
+                        </span>
+                        <span th:unless="${course.approved}"
+                              class="px-3 py-1 rounded-full text-xs font-semibold
+                                     bg-yellow-100 text-yellow-700">
+                            Pending
+                        </span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <a th:href="@{/instructor/course/{id}/students(id=${course.id})}"
+                           class="text-indigo-600 hover:underline">
+                            View Students
+                        </a>
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <a th:href="@{/instructor/course/{id}(id=${course.id})}"
+                           class="text-indigo-600 hover:underline">
+                            View Lessons
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow mb-10">
+        <h3 class="text-lg font-semibold mb-4">Add New Course</h3>
+
+        <form th:action="@{/courses/create}"
+              th:object="${course}"
+              method="post"
+              class="space-y-4">
+
+            <!-- Course Title -->
+            <input type="text"
+                   th:field="*{title}"
+                   placeholder="Course Title"
+                   class="w-full border border-gray-300 rounded-md px-3 py-2
+                      focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('title')}"
+               th:errors="*{title}"></p>
+
+            <!-- Description -->
+            <textarea th:field="*{description}"
+                      placeholder="Course Description"
+                      class="w-full border border-gray-300 rounded-md px-3 py-2
+                         focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('description')}"
+               th:errors="*{description}"></p>
+
+            <!-- Category -->
+            <input type="text"
+                   th:field="*{category}"
+                   placeholder="Category (e.g. Cloud, Java, Web)"
+                   class="w-full border border-gray-300 rounded-md px-3 py-2
+                      focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('category')}"
+               th:errors="*{category}"></p>
+
+            <button type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-700 transition
+                       text-white px-6 py-2 rounded-md font-medium">
+                Create Course
+            </button>
+        </form>
+    </div>
+
+
+
+    <div class="bg-white p-6 rounded-xl shadow mb-10">
+        <h3 class="text-lg font-semibold mb-4">Add Lesson to Course</h3>
+
+        <form th:action="@{/instructor/course/lesson}"
+              th:object="${lesson}"
+              method="post"
+              enctype="multipart/form-data"
+              class="space-y-4">
+
+            <!-- Course -->
+            <select th:field="*{course}"
+                    class="w-full border border-gray-300 rounded-md px-3 py-2">
+                <option value="">Select Course</option>
+                <option th:each="course : ${courses}"
+                        th:value="${course.id}"
+                        th:text="${course.title}">
+                </option>
+            </select>
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('course')}"
+               th:errors="*{course}"></p>
+
+            <!-- Lesson Title -->
+            <input type="text"
+                   th:field="*{title}"
+                   placeholder="Lesson Title"
+                   class="w-full border border-gray-300 rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('title')}"
+               th:errors="*{title}"></p>
+
+            <!-- File -->
+            <input type="file"
+                   name="file"
+                   class="w-full border border-gray-300 rounded-md px-3 py-2 bg-white">
+
+            <button type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-700 transition
+                       text-white px-6 py-2 rounded-md font-medium">
+                Add Lesson
+            </button>
+        </form>
+    </div>
+
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold mb-4">Add Quiz Question</h3>
+
+        <form th:action="@{/instructor/quiz/save}"
+              th:object="${quizQuestion}"
+              method="post"
+              class="space-y-4">
+
+            <!-- Course -->
+            <select th:field="*{course.id}"
+                    class="w-full border border-gray-300 rounded-md px-3 py-2">
+                <option value="">Select Course</option>
+                <option th:each="course : ${courses}"
+                        th:value="${course.id}"
+                        th:text="${course.title}">
+                </option>
+            </select>
+
+            <!-- Question -->
+            <input type="text" th:field="*{question}"
+                   placeholder="Enter Quiz Question"
+                   class="w-full border rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:if="${#fields.hasErrors('question')}"
+               th:errors="*{question}"></p>
+
+            <!-- Option A -->
+            <input type="text" th:field="*{optionA}"
+                   placeholder="Option A"
+                   class="w-full border rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:errors="*{optionA}"></p>
+
+            <!-- Option B -->
+            <input type="text" th:field="*{optionB}"
+                   placeholder="Option B"
+                   class="w-full border rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:errors="*{optionB}"></p>
+
+            <!-- Option C -->
+            <input type="text" th:field="*{optionC}"
+                   placeholder="Option C"
+                   class="w-full border rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:errors="*{optionC}"></p>
+
+            <!-- Option D -->
+            <input type="text" th:field="*{optionD}"
+                   placeholder="Option D"
+                   class="w-full border rounded-md px-3 py-2">
+
+            <p class="text-red-500 text-sm"
+               th:errors="*{optionD}"></p>
+
+            <!-- Correct Option -->
+            <select th:field="*{correctOption}"
+                    class="w-full border rounded-md px-3 py-2">
+                <option value="">Correct Option</option>
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+                <option value="C">Option C</option>
+                <option value="D">Option D</option>
+            </select>
+
+            <p class="text-red-500 text-sm"
+               th:errors="*{correctOption}"></p>
+
+            <button type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-700 transition
+                       text-white px-6 py-2 rounded-md font-medium">
+                Save Quiz Question
+            </button>
+        </form>
+    </div>
+
+
+</div>
+
+</body>
+</html>

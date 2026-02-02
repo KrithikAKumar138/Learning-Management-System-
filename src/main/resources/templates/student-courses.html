@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Courses - LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 font-sans text-gray-800">
+
+<div class="bg-indigo-600 text-white px-8 py-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-semibold">Learning Management System</h1>
+
+    <div class="flex items-center gap-6 text-sm">
+        <span>
+            Welcome,
+            <span class="font-medium" th:text="${#authentication.name}"></span>
+        </span>
+        <span class="bg-green-500 px-3 py-1 rounded-full text-xs font-semibold">
+            STUDENT
+        </span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-md text-sm font-medium">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-semibold mb-1">My Courses</h1>
+        <p class="text-gray-600">
+            Track your learning progress and continue where you left off
+        </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-8">
+        <a href="/student/courses?filter=All"
+           class="px-6 py-2 rounded-full text-sm font-medium transition
+                  bg-gray-100 hover:bg-gray-200"
+           th:classappend="${currentFilter == 'All'}
+             ? 'bg-indigo-600 text-white hover:bg-indigo-600' : ''">
+            All Courses
+        </a>
+
+        <a href="/student/courses?filter=In Progress"
+           class="px-6 py-2 rounded-full text-sm font-medium transition
+                  bg-gray-100 hover:bg-gray-200"
+           th:classappend="${currentFilter == 'In Progress'}
+             ? 'bg-indigo-600 text-white hover:bg-indigo-600' : ''">
+            In Progress
+        </a>
+
+        <a href="/student/courses?filter=Completed"
+           class="px-6 py-2 rounded-full text-sm font-medium transition
+                  bg-gray-100 hover:bg-gray-200"
+           th:classappend="${currentFilter == 'Completed'}
+             ? 'bg-indigo-600 text-white hover:bg-indigo-600' : ''">
+            Completed
+        </a>
+
+        <a href="/student/courses?filter=Not Started"
+           class="px-6 py-2 rounded-full text-sm font-medium transition
+                  bg-gray-100 hover:bg-gray-200"
+           th:classappend="${currentFilter == 'Not Started'}
+             ? 'bg-indigo-600 text-white hover:bg-indigo-600' : ''">
+            Not Started
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-5 rounded-xl shadow text-center">
+            <div class="text-3xl font-bold text-indigo-600"
+                 th:text="${totalCourses}">0</div>
+            <div class="text-sm text-gray-500">Total Courses</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow text-center">
+            <div class="text-3xl font-bold text-yellow-500"
+                 th:text="${inProgress}">0</div>
+            <div class="text-sm text-gray-500">In Progress</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow text-center">
+            <div class="text-3xl font-bold text-green-600"
+                 th:text="${completed}">0</div>
+            <div class="text-sm text-gray-500">Completed</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow text-center">
+            <div class="text-3xl font-bold text-gray-600"
+                 th:text="${notStarted}">0</div>
+            <div class="text-sm text-gray-500">Not Started</div>
+        </div>
+    </div>
+    <div class="bg-white p-8 rounded-xl shadow mb-10">
+        <h2 class="text-xl font-semibold mb-6 border-b border-indigo-600 inline-block pb-2">
+            My Learning Journey
+        </h2>
+
+        <div th:if="${enrollments.empty}"
+             class="text-center py-12 text-gray-500">
+            <div class="text-5xl mb-3">📚</div>
+            <h3 class="text-lg font-semibold">No courses enrolled yet</h3>
+            <p>Browse available courses below and start learning!</p>
+        </div>
+
+        <div th:each="enrollment : ${enrollments}"
+             class="border-b border-gray-200 pb-6 mb-6 last:border-b-0 last:mb-0">
+
+            <h3 class="text-lg font-semibold text-indigo-600 flex items-center gap-3">
+                <span th:text="${enrollment.course.title}"></span>
+
+                <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                      th:classappend="${enrollment.status == 'Completed'}
+                        ? 'bg-green-100 text-green-700'
+                        : (${enrollment.status == 'In Progress'}
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-gray-100 text-gray-600')"
+                      th:text="${enrollment.status}">
+                </span>
+            </h3>
+
+            <div class="flex flex-wrap gap-6 text-sm text-gray-600 mt-2">
+                <span>📁 <span th:text="${enrollment.course.category}"></span></span>
+                <span>👨‍🏫 <span th:text="${enrollment.course.createdBy}"></span></span>
+                <span>
+                    📅
+                    <span th:text="${#temporals.format(enrollment.enrolledDate,'dd MMM yyyy')}"></span>
+                </span>
+            </div>
+
+            <div class="mt-4 text-sm">
+                <strong th:text="${enrollment.progress}"></strong>% Completed
+            </div>
+
+            <div class="w-full h-2 bg-gray-200 rounded-full mt-1">
+                <div class="h-2 bg-indigo-600 rounded-full transition-all"
+                     th:style="'width:' + ${enrollment.progress} + '%'"></div>
+            </div>
+
+            <div class="mt-4">
+                <a th:href="@{/student/learn/{id}(id=${enrollment.course.id})}"
+                   class="inline-block px-5 py-2 rounded-md text-sm font-medium text-white transition"
+                   th:classappend="${enrollment.status == 'Not Started'}
+                     ? 'bg-indigo-600 hover:bg-indigo-700'
+                     : 'bg-green-500 hover:bg-green-600'"
+                   th:text="${enrollment.status == 'Not Started'}
+                     ? 'Start Learning'
+                     : 'Continue Learning'">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow"
+         th:if="${!availableCourses.empty}">
+        <h2 class="text-xl font-semibold mb-4 border-b border-indigo-600 inline-block pb-2">
+            Available Courses to Enroll
+        </h2>
+
+        <p class="text-gray-600 mb-6">Browse and enroll in new courses</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="course : ${availableCourses}"
+                 class="border border-gray-200 rounded-xl p-5 shadow-sm">
+
+                <h4 class="text-lg font-semibold mb-2"
+                    th:text="${course.title}"></h4>
+
+                <p class="text-sm text-gray-600 mb-4"
+                   th:text="${course.description}"></p>
+
+                <div class="text-sm text-gray-600 mb-4">
+                    📁 <span th:text="${course.category}"></span><br>
+                    👨‍🏫 <span th:text="${course.createdBy}"></span>
+                </div>
+
+                <form th:action="@{/student/enroll/{id}(id=${course.id})}"
+                      method="post">
+                    <button type="submit"
+                            class="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600
+                                   transition text-white rounded-md font-medium">
+                        Enroll Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

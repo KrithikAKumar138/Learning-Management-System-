@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 font-sans text-gray-800">
+
+
+<div class="bg-indigo-600 text-white px-8 py-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-semibold">Admin Dashboard</h1>
+
+    <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2 text-sm">
+            <span>
+                Welcome,
+                <span class="font-medium" th:text="${#authentication.name}"></span>
+            </span>
+            <span class="bg-purple-600 px-3 py-1 rounded-full text-xs font-semibold">
+                ADMIN
+            </span>
+        </div>
+
+        <a href="/admin/users"
+           class="bg-cyan-500 hover:bg-cyan-600 transition px-4 py-2 rounded-md text-sm font-medium">
+            Manage Users
+        </a>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-md text-sm font-medium">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- HEADER -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold mb-1">Course Approval System</h2>
+        <p class="text-gray-600">Review and approve courses submitted by instructors</p>
+    </div>
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <div class="text-4xl font-bold text-indigo-600"
+                 th:text="${totalCourses}">0</div>
+            <div class="text-sm text-gray-500 mt-1">Total Courses</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <div class="text-4xl font-bold text-yellow-500"
+                 th:text="${pendingCourses}">0</div>
+            <div class="text-sm text-gray-500 mt-1">Pending Approval</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <div class="text-4xl font-bold text-green-600"
+                 th:text="${approvedCourses}">0</div>
+            <div class="text-sm text-gray-500 mt-1">Approved Courses</div>
+        </div>
+
+
+    </div>
+
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+
+        <table class="w-full border-collapse">
+            <thead class="bg-indigo-50 text-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left text-sm font-semibold">ID</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Course Title</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Instructor</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Category</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Status</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">File</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-100">
+            <tr th:each="course, stat : ${courses}"
+                class="hover:bg-slate-50 transition">
+
+                <td class="px-4 py-3 text-sm" th:text="${stat.count}"></td>
+                <td class="px-4 py-3 text-sm font-medium"
+                    th:text="${course.title}"></td>
+                <td class="px-4 py-3 text-sm" th:text="${course.createdBy}"></td>
+                <td class="px-4 py-3 text-sm" th:text="${course.category}"></td>
+
+                <td class="px-4 py-3 text-sm">
+                    <span th:if="${course.approved}"
+                          class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                        Approved
+                    </span>
+                    <span th:unless="${course.approved}"
+                          class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                        Pending
+                    </span>
+                </td>
+
+                <td class="px-4 py-3 text-sm">
+                    <a th:href="@{/admin/course/{id}(id=${course.id})}"
+                       class="text-indigo-600 hover:underline">
+                        View Lessons
+                    </a>
+                </td>
+
+                <td class="px-4 py-3 text-sm space-x-2">
+
+                    <button th:if="${not course.approved}"
+                            th:onclick="'approveCourse(' + ${course.id} + ')'"
+                            class="px-3 py-1.5 bg-green-500 hover:bg-green-600 transition
+                                   text-white rounded-md text-xs font-medium">
+                        Approve
+                    </button>
+
+                    <button th:onclick="'deleteCourse(' + ${course.id} + ')'"
+                            class="px-3 py-1.5 bg-red-500 hover:bg-red-600 transition
+                                   text-white rounded-md text-xs font-medium">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function approveCourse(courseId) {
+        if (confirm('Are you sure you want to approve this course?')) {
+            fetch('/admin/course/' + courseId + '/approve', {
+                method: 'POST',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Course approved successfully!');
+                    location.reload();
+                } else {
+                    alert('Error approving course');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Request failed');
+            });
+        }
+    }
+
+function deleteCourse(courseId) {
+    if (confirm("Delete this course?")) {
+        fetch('/admin/course/' + courseId + '/delete', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(res => res.text())
+        .then(msg => {
+            alert(msg);
+            location.reload();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Delete failed');
+        });
+    }
+}
+</script>
+
+
+</body>
+</html>

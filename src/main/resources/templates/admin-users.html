@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - User Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 font-sans text-gray-800">
+
+<div class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <h2 class="text-lg font-semibold">Admin - User Management</h2>
+
+    <a href="/admin/dashboard"
+       class="text-sm font-medium hover:underline flex items-center gap-1">
+        ⬅ Back to Dashboard
+    </a>
+</div>
+
+<div class="max-w-6xl mx-auto mt-8 px-6">
+
+    <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="text-xl font-semibold mb-6">All Users</h3>
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead class="bg-indigo-50 text-gray-700">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">ID</th>
+                    <th class="px-4 py-3 text-left font-semibold">Name</th>
+                    <th class="px-4 py-3 text-left font-semibold">Email</th>
+                    <th class="px-4 py-3 text-left font-semibold">Role</th>
+                    <th class="px-4 py-3 text-left font-semibold">Change Role</th>
+                    <th class="px-4 py-3 text-left font-semibold">Action</th>
+                </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100">
+                <tr th:each="user , stat : ${users}"
+                    class="hover:bg-slate-50 transition">
+
+                    <td class="px-4 py-3" th:text="${stat.count}"></td>
+                    <td class="px-4 py-3 font-medium" th:text="${user.name}"></td>
+                    <td class="px-4 py-3" th:text="${user.email}"></td>
+
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                     bg-gray-100 text-gray-700"
+                              th:text="${user.role}">
+                        </span>
+                    </td>
+
+                    <td class="px-4 py-3 space-x-2">
+                        <select th:id="'role_'+${user.id}"
+                                class="border border-gray-300 rounded-md px-2 py-1 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="STUDENT">STUDENT</option>
+                            <option value="INSTRUCTOR">INSTRUCTOR</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+
+                        <button class="ml-2 px-3 py-1.5 bg-green-500 hover:bg-green-600
+                                       text-white rounded-md text-xs font-medium transition"
+                                th:onclick="'updateRole(' + ${user.id} + ')'">
+                            Update
+                        </button>
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        <button class="px-3 py-1.5 bg-red-500 hover:bg-red-600
+                                       text-white rounded-md text-xs font-medium transition"
+                                th:onclick="'deleteUser(' + ${user.id} + ')'">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteUser(id) {
+        if (confirm("Are you sure?")) {
+            fetch('/admin/user/delete/' + id, { method: 'POST' })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload();
+                });
+        }
+    }
+
+    function updateRole(id) {
+        let role = document.getElementById("role_" + id).value;
+
+        fetch('/admin/user/role/' + id + '?role=' + role, { method: 'POST' })
+            .then(res => res.text())
+            .then(msg => {
+                alert(msg);
+                location.reload();
+            });
+    }
+</script>
+
+</body>
+</html>

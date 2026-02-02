@@ -1,0 +1,27 @@
+# Maven
+target/
+*.jar
+*.class
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.sts4-cache/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+# Firebase credentials
+src/main/resources/firebase/firebase-service-account.json
