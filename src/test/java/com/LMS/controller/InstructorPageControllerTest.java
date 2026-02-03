@@ -35,9 +35,6 @@ class InstructorPageControllerTest {
     @MockitoBean
     private QuizQuestionRepository quizQuestionRepository;
 
-    // ----------------------------------------
-    // DASHBOARD
-    // ----------------------------------------
     @Test
     void shouldLoadInstructorDashboard() throws Exception {
 
@@ -53,9 +50,7 @@ class InstructorPageControllerTest {
                 .andExpect(model().attributeExists("quizQuestion"));
     }
 
-    // ----------------------------------------
-    // COURSE PLAYER - SUCCESS
-    // ----------------------------------------
+
     @Test
     void shouldLoadInstructorCoursePlayer() throws Exception {
 
@@ -85,9 +80,7 @@ class InstructorPageControllerTest {
                 .andExpect(model().attribute("basePath", "/instructor"));
     }
 
-    // ----------------------------------------
-    // COURSE PLAYER - NOT OWNER
-    // ----------------------------------------
+
     @Test
     void shouldRedirectIfInstructorIsNotOwner() throws Exception {
 
@@ -103,9 +96,7 @@ class InstructorPageControllerTest {
                 .andExpect(redirectedUrl("/instructor/dashboard"));
     }
 
-    // ----------------------------------------
-    // COURSE PLAYER - NOT FOUND
-    // ----------------------------------------
+
     @Test
     void shouldThrowResourceNotFoundIfCourseMissing() throws Exception {
 

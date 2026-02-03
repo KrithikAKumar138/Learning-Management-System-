@@ -27,9 +27,6 @@ class StudentControllerTest {
     @MockitoBean
     private StudentService studentService;
 
-    // -------------------------------------------------
-    // GET /student/courses
-    // -------------------------------------------------
     @Test
     @WithMockUser(username = "student1", roles = "STUDENT")
     void shouldReturnStudentCoursesPage() throws Exception {
@@ -61,9 +58,6 @@ class StudentControllerTest {
                 .andExpect(model().attributeExists("notStarted"));
     }
 
-    // -------------------------------------------------
-    // POST /student/enroll/{courseId} - SUCCESS
-    // -------------------------------------------------
     @Test
     @WithMockUser(username = "student1", roles = "STUDENT")
     void shouldEnrollStudentSuccessfully() throws Exception {
@@ -76,9 +70,6 @@ class StudentControllerTest {
                 .andExpect(flash().attribute("messageType", "success"));
     }
 
-    // -------------------------------------------------
-    // POST /student/enroll/{courseId} - FAILURE
-    // -------------------------------------------------
     @Test
     @WithMockUser(username = "student1", roles = "STUDENT")
     void shouldFailEnrollment() throws Exception {
@@ -95,9 +86,7 @@ class StudentControllerTest {
                 .andExpect(flash().attribute("messageType", "error"));
     }
 
-    // -------------------------------------------------
-    // POST /student/progress/{enrollmentId}
-    // -------------------------------------------------
+
     @Test
     @WithMockUser(username = "student1", roles = "STUDENT")
     void shouldUpdateProgress() throws Exception {
@@ -112,9 +101,7 @@ class StudentControllerTest {
                 .updateProgress(10L, 75);
     }
 
-    // -------------------------------------------------
-    // POST /student/complete/{enrollmentId}
-    // -------------------------------------------------
+
     @Test
     @WithMockUser(username = "student1", roles = "STUDENT")
     void shouldMarkCourseAsCompleted() throws Exception {

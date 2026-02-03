@@ -17,13 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class InstructorPageController {
 
-    private final CourseRepository courseRepository;
+    @Autowired
+    private  CourseRepository courseRepository;
 
-
-
-    public InstructorPageController(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
     @Autowired
     private QuizQuestionRepository quizQuestionRepository;
 

@@ -36,18 +36,6 @@ public class InstructorLessonController {
     private FirebaseStorageService firebaseStorageService;
 
 
-//    @PostMapping("/course/lesson")
-//    public String uploadLesson(
-//            @RequestParam Long courseId,
-//            @RequestParam String title,
-//            @RequestParam(required = false) String content,
-//            @RequestParam MultipartFile file) {
-//
-//        instructorService.addLesson(courseId, title, content, file);
-//
-//        return "redirect:/instructor/dashboard";
-//    }
-
     @PostMapping("/course/lesson")
     public String uploadLesson(
             @Valid @ModelAttribute("lesson") Lesson lesson,

@@ -45,7 +45,7 @@ class HomeControllerTest {
                 .thenReturn("encodedPassword");
 
         mockMvc.perform(post("/register")
-                        .param("name", "Test User")          // ✅ REQUIRED
+                        .param("name", "Test User")
                         .param("email", "test@test.com")
                         .param("password", "123456"))
                 .andExpect(status().isOk())

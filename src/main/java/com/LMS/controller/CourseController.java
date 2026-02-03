@@ -33,9 +33,9 @@ public class CourseController {
             model.addAttribute("courses",
                     courseRepository.findByCreatedBy(email));
 
-            model.addAttribute("course", course);              // 🔥 REQUIRED
-            model.addAttribute("lesson", new Lesson());         // 🔥 REQUIRED
-            model.addAttribute("quizQuestion", new QuizQuestion()); // 🔥 REQUIRED
+            model.addAttribute("course", course);
+            model.addAttribute("lesson", new Lesson());
+            model.addAttribute("quizQuestion", new QuizQuestion());
 
             return "instructor-dashboard";
         }
