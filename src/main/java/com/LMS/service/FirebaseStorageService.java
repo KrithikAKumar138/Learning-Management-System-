@@ -1,5 +1,6 @@
 package com.LMS.service;
 
+import com.LMS.exception.LessonUploadException;
 import com.google.firebase.cloud.StorageClient;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
@@ -34,9 +35,10 @@ public class FirebaseStorageService {
                     + "?alt=media";
 
         } catch (Exception e) {
-            throw new RuntimeException("File upload failed", e);
+            throw new LessonUploadException("Failed to upload file to storage", e);
         }
     }
-}
+    }
+
 
 

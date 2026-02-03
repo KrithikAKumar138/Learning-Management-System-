@@ -44,13 +44,14 @@ public class FirebaseConfig {
 //    @PostConstruct
 //    public void init() {
 //        try {
-//            ClassPathResource resource =
-//                    new ClassPathResource("firebase/firebase-service-account.json");
-//
-//            InputStream serviceAccount = resource.getInputStream();
+//            InputStream serviceAccount =
+//                    new ClassPathResource("firebase/firebase-service-account.json")
+//                            .getInputStream();
 //
 //            FirebaseOptions options = FirebaseOptions.builder()
 //                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                    .setStorageBucket("lms-project-1a9cb.firebasestorage.app")
+//
 //                    .build();
 //
 //            if (FirebaseApp.getApps().isEmpty()) {
@@ -58,10 +59,10 @@ public class FirebaseConfig {
 //            }
 //
 //        } catch (Exception e) {
-//            throw new RuntimeException("❌ Firebase initialization failed", e);
+//            e.printStackTrace();
+//            throw new RuntimeException("Firebase initialization failed");
 //        }
 //    }
-
 
 
 

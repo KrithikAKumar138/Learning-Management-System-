@@ -5,9 +5,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public void ignoreStaticResources() {
+        // intentionally empty → ignore favicon.ico & similar
+    }
 
     // ---------------------------
     // RESOURCE NOT FOUND (404)
@@ -50,7 +56,16 @@ public class GlobalExceptionHandler {
     // ---------------------------
     @ExceptionHandler(Exception.class)
     public String handleGeneric(Exception ex, Model model) {
-        model.addAttribute("errorMessage", "Something went wrong. Please try again.");
+        ex.printStackTrace(); // 🔥 THIS LINE IS CRITICAL
+        model.addAttribute("errorMessage", ex.getMessage());
         return "error";
     }
+
+    @ExceptionHandler(LessonUploadException.class)
+    public String handleLessonUpload(LessonUploadException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "instructor-dashboard";
+    }
+
+
 }

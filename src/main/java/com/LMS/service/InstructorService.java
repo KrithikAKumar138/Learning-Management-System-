@@ -2,6 +2,7 @@ package com.LMS.service;
 
 import com.LMS.entity.Lesson;
 import com.LMS.entity.Course;
+import com.LMS.exception.LessonUploadException;
 import com.LMS.exception.ResourceNotFoundException;
 import com.LMS.repository.LessonRepository;
 import com.LMS.repository.CourseRepository;
@@ -27,8 +28,9 @@ public class InstructorService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() ->  new ResourceNotFoundException("Course not found"));
         if (file == null || file.isEmpty()) {
-            throw new IllegalStateException("Lesson upload failed. Please try again.");
+            throw new LessonUploadException("Please select a lesson file");
         }
+
 
         try {
             String firebaseUrl =
@@ -63,9 +65,9 @@ public class InstructorService {
             lessonRepository.save(lesson);
 
         } catch (Exception e) {
-            throw new IllegalStateException("Lesson upload failed. Please try again.");
-
+            throw new LessonUploadException("Lesson upload failed. Please try again.", e);
         }
+
     }
 }
 
