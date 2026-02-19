@@ -42,6 +42,7 @@ Clean UI built with Thymeleaf + Tailwind CSS
 Unit and integration tests using JUnit 5 and Mockito
 
 🚀 Features
+
 🔐 Authentication & Authorization
 
 Login and registration system
@@ -129,6 +130,7 @@ Unit tests for Controllers, Services, and Repositories
 Ready for deployment with PostgreSQL
 
 🛠️ Tech Stack
+
 Backend
 
 Spring Boot 3
@@ -141,7 +143,7 @@ Hibernate
 
 MySQL (Local Development)
 
-PostgreSQL (Production / Deployment)
+PostgreSQL (Deployment)
 
 Firebase Storage (for media files)
 
@@ -167,9 +169,9 @@ Maven
 
 Deployment
 
-Backend: Render / Railway / AWS EC2
+Backend: Render
 
-Database: PostgreSQL (Production)
+Database: MySQL/PostgreSQL 
 
 Storage: Firebase Storage
 
@@ -178,10 +180,11 @@ LMS
 ├── src
 │   ├── main
 │   │   ├── java/com/LMS
-│   │   │   ├── config       
-│   │   │   ├── controller   
-│   │   │   ├── entity       
-│   │   │   ├── exception     
+│   │   │   ├── config        
+│   │   │   ├── controller    
+│   │   │   ├── entity        
+│   │   │   ├── exception    
+│   │   │   ├── repository    
 │   │   │   └── service       
 │   │   └── resources
 │   │       ├── templates     
@@ -194,6 +197,7 @@ LMS
 └── README.md
 
 ⚙️ Database Configuration
+
 ✅ Local Development (MySQL)
 
 In application.properties:
@@ -207,6 +211,7 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 🚀 Production / Deployment (PostgreSQL)
+
 spring.datasource.url=jdbc:postgresql://<host>:<port>/<db_name>
 spring.datasource.username=<db_username>
 spring.datasource.password=<db_password>
@@ -219,16 +224,3 @@ spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
 This project uses Firebase Storage to store lesson files (videos, PDFs, etc).
 
-Set this environment variable:
-
-FIREBASE_SERVICE_ACCOUNT=<your-firebase-service-account-json>
-
-
-
-
-
-
-
-Run:
-
-java -jar target/LMS-0.0.1-SNAPSHOT.jar
