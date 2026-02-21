@@ -180,23 +180,41 @@ Deployment
 ________________________________________
 📁 Project Structure
 LMS
+
 ├── src
+
 │   ├── main
+
 │   │   ├── java/com/LMS
-│   │   │   ├── config        
-│   │   │   ├── controller    
+
+│   │   │   ├── config   
+
+│   │   │   ├── controller  
+
 │   │   │   ├── entity       
+
 │   │   │   ├── exception     
+
 │   │   │   ├── repository    
-│   │   │   └── service      
+
+│   │   │   └── service  
+
 │   │   └── resources
+
 │   │       ├── templates    
+
 │   │       ├── static
+
 │   │       └── application.properties
+
 │   └── test
-│       └── java/com/LMS      
+
+│       └── java/com/LMS   
+
 ├── Dockerfile
+
 ├── mvnw / mvnw.cmd
+
 └── README.md
 ________________________________________
 ☁️ Firebase Storage Setup
